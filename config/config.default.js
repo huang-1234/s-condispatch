@@ -42,10 +42,14 @@ module.exports = appInfo => {
     csrf: {
       enable: false,
     },
-    domainWhiteList: [ '*' ],
+    domainWhiteList: [ '*' ], // *表示所有都可以跨域，后面可以仔细研究一下
+    // domainWhiteList: ['http://127.0.0.1:3000' ],
   };
   config.cors = {
-    origin: '*',
+    // origin: '*', // *表示所有的都可以
+    origin: 'http://localhost:3000', //
+    // origin: 'http://127.0.0.1:3000', //
+    credentials: true, // 表是否允许cookie进行跨域
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
   // add your user config here
