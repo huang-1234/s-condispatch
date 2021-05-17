@@ -49,7 +49,7 @@ module.exports = appInfo => {
     // origin: '*', // *表示所有的都可以
     origin: 'http://localhost:3000', //
     // origin: 'http://127.0.0.1:3000', //
-    credentials: true, // 表是否允许cookie进行跨域
+    credentials: true, // 表是否允许cookie进行跨域,前后台共享session
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
   // add your user config here
