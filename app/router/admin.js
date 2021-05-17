@@ -8,4 +8,9 @@ module.exports = app => {
   router.post('/admin/checkLogin', controller.admin.main.checkLogin);
   // 使用中间件实现路由守卫
   router.get('/admin/getTypeInfo', controller.admin.main.getTypeInfo);
+
+  router.post('/admin/addArticle', controller.admin.main.addArticle);
+
+  router.post('/admin/updateArticle', adminauth, controller.admin.main.updateArticle);
+
 };

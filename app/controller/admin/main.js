@@ -22,10 +22,13 @@ class MainController extends Controller {
       console.log(loginTips);
       const openID = new Date().getTime();
       // 应该是这里存储session.openID的时候错了
+      // eslint-disable-next-line quote-props
       ctx.session.openID = { 'openID': openID };
       // 传一个sessionID，方便后续就不用频繁的访问数据库了
       ctx.body = {
+        // eslint-disable-next-line quote-props
         'data': 'login_successfully',
+        // eslint-disable-next-line quote-props
         'openID': openID,
       };
     } else {
@@ -41,6 +44,37 @@ class MainController extends Controller {
     const artiType = await app.mysql.select('type');
     console.log('admin/main--artiType:', artiType);
     ctx.body = { data: artiType };
+  }
+
+  // 保存文章，添加文章的接口
+  async addArticle() {
+    const { ctx, app } = this;
+    const tmpArticle = ctx.request.body;
+    console.log('service/con/admin/main.js--addtmpArticle:', tmpArticle.articleId, tmpArticle.title);
+    const result = await app.mysql.insert('article', tmpArticle);
+    const insertSuccess = result.affectedRows === 1;
+    const insertId = result.insertId;
+    console.log('service/con/admin/main.js--await app.mysql.insert:', result);
+
+    ctx.body = {
+      isSucccess: insertSuccess,
+      // eslint-disable-next-line object-shorthand
+      insertId: insertId,
+    };
+  }
+
+  // 修改文章
+  async updateArticle() {
+    const { ctx, app } = this;
+    const tmpArticle = ctx.request.body;
+
+    const result = await app.mysql.update('article', tmpArticle);
+    const updateSuccess = result.affectedRows === 1;
+    console.log('service/con/admin/main.js--updatetmpArticle:', tmpArticle.articleId, tmpArticle.title);
+    console.log('service/con/admin/main.js--updateSuccess:', updateSuccess, result);
+    ctx.body = {
+      isScuccess: updateSuccess,
+    };
   }
 }
 
