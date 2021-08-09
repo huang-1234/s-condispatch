@@ -24,12 +24,13 @@ class MainController extends Controller {
       // 应该是这里存储session.openID的时候错了
       // eslint-disable-next-line quote-props
       ctx.session.openID = { 'openID': openID };
+      console.log('ctx.session.openID<<', ctx.session.openID);
       // 传一个sessionID，方便后续就不用频繁的访问数据库了
       ctx.body = {
         // eslint-disable-next-line quote-props
-        'data': 'login_successfully',
+        data: 'login_successfully',
         // eslint-disable-next-line quote-props
-        'openID': openID,
+        openID: openID,
       };
     } else {
       ctx.body = {
@@ -57,7 +58,7 @@ class MainController extends Controller {
     console.log('service/con/admin/main.js--await app.mysql.insert:', result);
 
     ctx.body = {
-      isSucccess: insertSuccess,
+      isSuccess: insertSuccess,
       // eslint-disable-next-line object-shorthand
       insertId: insertId,
     };
@@ -67,11 +68,11 @@ class MainController extends Controller {
   async updateArticle() {
     const { ctx, app } = this;
     const tmpArticle = ctx.request.body;
-
+    console.log('/admin/main.js--tmpArticle--', tmpArticle);
     const result = await app.mysql.update('article', tmpArticle);
     const updateSuccess = result.affectedRows === 1;
     console.log('service/con/admin/main.js--updatetmpArticle:', tmpArticle.articleId, tmpArticle.title);
-    console.log('service/con/admin/main.js--updateSuccess:', updateSuccess, result);
+    console.log('service/con/admin/main.js--updateSuccess:', updateSuccess, result.affectedRows);
     ctx.body = {
       isScuccess: updateSuccess,
     };
@@ -83,6 +84,7 @@ class MainController extends Controller {
     const sql = 'SELECT article.articleId as id,' +
       'article.title as title,' +
       'article.introduce as introduce,' +
+      'article.view_count as view_count,' +
       "FROM_UNIXTIME(article.addTime,'%Y-%m-%d' ) as addTime," +
       'type.typeName as typeName ' +
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
@@ -97,7 +99,8 @@ class MainController extends Controller {
   async delArticle() {
     const { ctx, app } = this;
     const id = ctx.params.id;
-    const res = await app.mysql.delete('article', { id });
+    // eslint-disable-next-line quote-props
+    const res = await app.mysql.delete('article', { 'id': id });
     ctx.body = { data: res };
   }
 
@@ -105,7 +108,7 @@ class MainController extends Controller {
   async getArticleById() {
     const { ctx, app } = this;
     const id = ctx.params.id;
-
+    console.log('getArticleById-----:', id);
     const sql = 'SELECT article.articleId as id,' +
       'article.title as title,' +
       'article.introduce as introduce,' +
@@ -117,6 +120,7 @@ class MainController extends Controller {
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
       'WHERE article.articleId=' + id;
     const result = await app.mysql.query(sql);
+    console.log('getArticleById/result', result);
     ctx.body = { data: result };
   }
 }

@@ -16,7 +16,9 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1620896559869_5567';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [
+    // 'adminauth', // 只要在这里注册这个中间件，就一定会用上
+  ];
 
   // 配置mysql
   config.mysql = { // database configuration

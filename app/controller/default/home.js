@@ -6,12 +6,12 @@ class HomeController extends Controller {
   async index() {
     const { ctx, app } = this;
     const result = await app.mysql.get('article', {});
-    console.log(result);
+    // console.log(result);
     ctx.body = result;
   }
   async getArticleList() {
     const { ctx, app } = this;
-    const sql = 'SELECT article.id as id,' +
+    const sql = 'SELECT article.articleId as articleId,' +
       'article.title as title, ' +
       'article.introduce as introduce,' +
       'article.article_content as article_content,' +
@@ -20,7 +20,7 @@ class HomeController extends Controller {
       'type.typeName as typeName ' +
       'FROM article LEFT JOIN type ON article.type_id = type.Id';
     const results = await app.mysql.query(sql);
-    console.log('getArticleList:', results);
+    console.log('getArticleList:', results[0].title, results[1].title);
     ctx.body = {
       data: results,
     };
@@ -48,7 +48,9 @@ class HomeController extends Controller {
 
   }
 
-  // 得到类别名称和编号
+  /**
+   * 得到类别名称和编号
+   */
   async getTypeInfo() {
     const { app, ctx } = this;
     const result = await app.mysql.select('type');
@@ -58,7 +60,9 @@ class HomeController extends Controller {
   }
 
 
-  // 根据类别ID获得文章列表
+  /**
+   * 根据类别ID获得文章列表
+   */
   async getListById() {
     const id = this.ctx.params.id;
     const sql = 'SELECT article.id as id,' +
