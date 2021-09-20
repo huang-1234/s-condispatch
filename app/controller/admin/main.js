@@ -13,7 +13,8 @@ class MainController extends Controller {
     const { ctx, app } = this;
     const username = ctx.request.body.username;
     const password = ctx.request.body.password;
-    const sql = "SELECT admin_user.username FROM admin_user WHERE admin_user.username = '" + username + "'AND admin_user.password = '" + password + "'";
+    // const sql = "SELECT admin_user.username FROM admin_user WHERE admin_user.username = '" + username + "'AND admin_user.password = '" + password + "'";
+    const sql = `SELECT admin_user.username FROM admin_user WHERE admin_user.username = ${username} AND admin_user.password = ${password}`;
     const res = await app.mysql.query(sql);
     console.log('admin/main.js--mysql.query(sql):', res);
     // 判断数据库中是否有该用户
@@ -30,7 +31,7 @@ class MainController extends Controller {
         // eslint-disable-next-line quote-props
         data: 'login_successfully',
         // eslint-disable-next-line quote-props
-        openID: openID,
+        openID,
       };
     } else {
       ctx.body = {
