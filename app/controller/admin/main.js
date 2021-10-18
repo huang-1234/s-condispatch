@@ -7,44 +7,11 @@ class MainController extends Controller {
     const { ctx } = this;
     ctx.body = 'hello admin';
   }
-  // login interface
-  async checkLogin() {
-    // 这个地方接收的username和password可以使用md5加密
-    const { ctx, app } = this;
-    const username = ctx.request.body.username;
-    const password = ctx.request.body.password;
-    // const sql = "SELECT admin_user.username FROM admin_user WHERE admin_user.username = '" + username + "'AND admin_user.password = '" + password + "'";
-    const sql = `SELECT admin_user.username FROM admin_user WHERE admin_user.username = ${username} AND admin_user.password = ${password}`;
-    const res = await app.mysql.query(sql);
-    console.log('admin/main.js--mysql.query(sql):', res);
-    // 判断数据库中是否有该用户
-    if (res.length > 0) {
-      const loginTips = `login_successfully! username is ${username}, it password is ${password}`;
-      console.log(loginTips);
-      const openID = new Date().getTime();
-      // 应该是这里存储session.openID的时候错了
-      // eslint-disable-next-line quote-props
-      ctx.session.openID = { 'openID': openID };
-      console.log('ctx.session.openID<<', ctx.session.openID);
-      // 传一个sessionID，方便后续就不用频繁的访问数据库了
-      ctx.body = {
-        // eslint-disable-next-line quote-props
-        data: 'login_successfully',
-        // eslint-disable-next-line quote-props
-        openID,
-      };
-    } else {
-      ctx.body = {
-        data: 'failed_login',
-      };
-    }
-  }
 
   // get info of article class
   async getTypeInfo() {
     const { app, ctx } = this;
     const artiType = await app.mysql.select('type');
-    console.log('admin/main--artiType:', artiType);
     ctx.body = { data: artiType };
   }
 
@@ -60,7 +27,6 @@ class MainController extends Controller {
 
     ctx.body = {
       isSuccess: insertSuccess,
-      // eslint-disable-next-line object-shorthand
       insertId: insertId,
     };
   }
@@ -69,11 +35,11 @@ class MainController extends Controller {
   async updateArticle() {
     const { ctx, app } = this;
     const tmpArticle = ctx.request.body;
-    console.log('/admin/main.js--tmpArticle--', tmpArticle);
+     console.log('/admin/main.js--tmpArticle--', tmpArticle);
     const result = await app.mysql.update('article', tmpArticle);
     const updateSuccess = result.affectedRows === 1;
-    console.log('service/con/admin/main.js--updatetmpArticle:', tmpArticle.articleId, tmpArticle.title);
-    console.log('service/con/admin/main.js--updateSuccess:', updateSuccess, result.affectedRows);
+     console.log('service/con/admin/main.js--updatetmpArticle:', tmpArticle.articleId, tmpArticle.title);
+     console.log('service/con/admin/main.js--updateSuccess:', updateSuccess, result.affectedRows);
     ctx.body = {
       isScuccess: updateSuccess,
     };
@@ -92,6 +58,7 @@ class MainController extends Controller {
       'ORDER BY article.articleId DESC ';
 
     const resList = await app.mysql.query(sql);
+    console.log('getArticleList',resList)
     ctx.body = { list: resList };
 
   }
@@ -121,6 +88,7 @@ class MainController extends Controller {
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
       'WHERE article.articleId=' + id;
     const result = await app.mysql.query(sql);
+    // const result = await ctx.service.admin.article.qArticleById(id)
     console.log('getArticleById/result', result);
     ctx.body = { data: result };
   }

@@ -10,8 +10,7 @@ module.exports = (options, app) => {
       console.log('authLogin');
       if (!ctx.session.userId) {
         ctx.redirect('/login'); // 让用户去登录
-      }
-      else {
+      } else {
         console.log('auth ok');
         await next();
       }
